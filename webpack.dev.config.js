@@ -1,11 +1,13 @@
 const baseWebpackConfig = require('./webpack.config')
 const { merge } = require('webpack-merge');
+const webpack = require('webpack')
 module.exports =   merge(baseWebpackConfig, {
     mode:'development',
     devtool : 'eval-source-map',
     devServer: {
-        contentBase: './dist',
-        hot: true,
+      contentBase: './dist',
+      hot: true,
+      overlay: true
     },
     module: {
         rules: [

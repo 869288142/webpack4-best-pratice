@@ -1030,5 +1030,13 @@ yarn add  html-webpack-plugin@next
 // },
 ```
 
-热更新失败
+## 热更新失效
+
+webpack.config.js
+
+``` js
+module.exports = {
+    target: 'web'
+}
+```
 
