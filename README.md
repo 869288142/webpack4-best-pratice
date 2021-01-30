@@ -449,6 +449,10 @@ requireAll(req);
 
 ![](src\images\svg.png)
 
+## 支持静态资源
+
+
+
 ## 配置Vue环境
 
 ### 安装依赖

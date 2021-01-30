@@ -35,8 +35,8 @@ module.exports =   merge(baseWebpackConfig, {
     [ 
         new MiniCssExtractPlugin(
             {
-                filename: '[name].[contenthash].css',
-                chunkFilename: '[name].[contenthash].css'
+                filename: '[name].[contenthash:8].css',
+                chunkFilename: '[name].[contenthash:8].css'
             }
         ),   
         new webpack.NamedChunksPlugin(
@@ -52,8 +52,8 @@ module.exports =   merge(baseWebpackConfig, {
         hashedModuleIds: true,
     },
     output: { 
-        filename: '[name].[contenthash].js',
-        chunkFilename: '[name].[contenthash].js'
+        filename: '[name].[contenthash:8].js',
+        chunkFilename: '[name].[contenthash:8].js',
     }, 
  
 });
