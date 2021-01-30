@@ -1,4 +1,6 @@
-# webpack4最佳实践
+
+
+目前前端工程化很好，前端工程化在构建方面的核心毫无疑问是webpack，webpack工程师，是每个前端工程师都要有的头衔(狗头保命)，为了学习webpack，笔者看完了webpack中文网又查阅很多webpack的文章和VueCli和CRA脚手架，发掘目前基础webpack配置
 
 ## 安装webpack
 
@@ -44,7 +46,7 @@ module.exports = {
 ``` shell
 yarn dev
 ```
-
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c75b1e28bd64f6b962c7134a545bfcc~tplv-k3u1fbpfcp-watermark.image)
 ![](./src/images/firstBundle.png)
 
 
@@ -76,7 +78,7 @@ const a = 1
 yarn dev
 ```
 
-
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/99b831c2e2b144b2bbcae218538d8d6c~tplv-k3u1fbpfcp-watermark.image)
 ![](./src/images/webpack-compiler.png)
 
 
@@ -128,6 +130,7 @@ yarn dev
 ```
 
 ![](src\images\babel-compiler.png)
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de6619eb4b194253a95dc2b6c6577526~tplv-k3u1fbpfcp-watermark.image)
 
 可以看到我们的const已经被转译成了var
 
@@ -141,6 +144,7 @@ Promise.resolve(1)
 
 执行`yarn dev`
 
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/816d6e356da0499c8224e61d909fec62~tplv-k3u1fbpfcp-watermark.image)
 ![](./src/images/babel-api-test.png)
 
 可以看到我们的Promise并没有转译，<span style="color:red">也就会缺少API级别的兼容性</span>
@@ -197,6 +201,7 @@ Promise.resolve(1)
 
 打包结果
 
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/17b039a564a04554a55fab209c7aa29a~tplv-k3u1fbpfcp-watermark.image)
 ![](src/images/babel-polyfill.png)
 
 ## css引入支持
@@ -217,6 +222,7 @@ import './css/global.css'
 
 执行`yarn dev`
 
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5cb66a1e3804fbf94e2be66f6c03767~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\no-css-loader-import.png)
 
 出现报错提示我们可能需要这个文件类型的`loader`，这里需要安装`css-loader`,同时配置`webpack`
@@ -282,6 +288,7 @@ module.exports = {
 
 执行`yarn dev`并刷新页面，看到css生效
 
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f9634df2a20e4f9da397d121e22b6c87~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\style-loader.png)
 
 ## 配置CSS私有前缀编译
@@ -349,6 +356,7 @@ body {
 
 ### 执行编译验证结果
 
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4e4478e1d9741e48e21d305980ee98a~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\postCSS.png)
 
 编译后已经输出了flex的浏览器私有前缀
@@ -447,10 +455,46 @@ requireAll(req);
 
 `yarn dev`
 
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bffca7dd7e92421dbed68ad1c8da75a4~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\svg.png)
 
 ## 支持静态资源
 
+### 安装依赖
+
+``` shell
+yarn add file-loader  url-loader
+```
+
+### 配置webpack
+
+``` js
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.(png|jpg|gif)$/i,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      limit: 8192,
+                    },
+                  },
+                ],
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                  {
+                    loader: 'file-loader',
+                  },
+                ],
+            },
+        ]
+    },
+};
+```
 
 
 ## 配置Vue环境
@@ -550,6 +594,7 @@ package.json
 
 运行`yarn dev`
 
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/483f0939adf4415fa4dee009148b6d36~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\hot-load.png)
 
 打开提示地址，查看结果，可以看到我们的代码已经在热更新服务器上运行，此时我们随意修改样式，可以实时生效
@@ -682,6 +727,7 @@ module.exports =   merge(baseWebpackConfig, {
 
 `yarn build`
 
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a0865e30b8a4161a3170649cace7812~tplv-k3u1fbpfcp-watermark.image)
 ![](src\images\teser.png)
 
 
@@ -775,8 +821,8 @@ module.exports =   merge(baseWebpackConfig, {
         // 稳定css hash
         new MiniCssExtractPlugin(
             {
-                filename: '[name].[contenthash].css',
-                chunkFilename: '[name].[contenthash].css'
+                filename: '[name].[contenthash:8].css',
+                chunkFilename: '[name].[contenthash:8].css'
             }
         ),   
         // 稳定chunk ID
@@ -792,14 +838,14 @@ module.exports =   merge(baseWebpackConfig, {
         // 分离chunks 映射关系，避免chunk改动时主js hash变动
         runtimeChunk: true,
         // 稳定文件hash
-        filename: '[name].[contenthash].js',
+        filename: '[name].[contenthash:8].js',
         // 稳定chunk hash
-        chunkFilename: '[name].[contenthash].js'
+        chunkFilename: '[name].[contenthash:8].js'
     }, 
 });
 ```
 
-## 性能优化
+## 性能优化-速度
 
 ### 并发
 
@@ -871,3 +917,39 @@ module.exports = {
     },
 };
 ```
+
+## 性能优化 - 体积
+
+### 分包
+
+webpack的默认分包只是分包异步块，我们需要自己调整一下
+
+webpack.config.js
+
+``` js
+module.exports = {
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                // node_modules打包在一个文件，提高缓存率
+                vendors: {
+                  name: `chunk-vendors`,
+                  test: /[\\/]node_modules[\\/]/,
+                  priority: -10,
+                  chunks: 'initial'
+                },
+                // 提取引入超过2次的代码,减少打包体积
+                common: {
+                  name: `chunk-common`,
+                  minChunks: 2,
+                  priority: -20,
+                  chunks: 'initial',
+                  reuseExistingChunk: true
+                }
+              }
+        }
+    }
+};
+```
+
+执行`yarn build`可以看到`dist`下增加了一个`chunk-vendors`文件
