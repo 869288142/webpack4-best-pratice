@@ -952,4 +952,12 @@ module.exports = {
 };
 ```
 
-执行`yarn build`可以看到`dist`下增加了一个`chunk-vendors`文件
+执行`yarn build`可以看到`dist`下增加了一个`chunk-vendors`文件\
+
+## 升级到webpack5
+
+``` shell
+yarn add webpack
+```
+
+热更新失败
