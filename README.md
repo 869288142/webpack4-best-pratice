@@ -997,9 +997,38 @@ webpack5内置了缓存机制，缓存效果和缓存安全性更好,cache-loade
 yarn add  html-webpack-plugin@next
 ```
 
+### 废弃file-loader和url-loader
+
+``` js
+{
+    test: /\.(png|jpg|gif)$/i,
+    type: 'asset/resource'
+},
+// {
+//     test: /\.(png|jpg|gif)$/i,
+//     use: [
+//       {
+//         loader: 'url-loader',
+//         options: {
+//           limit: 8192,
+//         },
+//       },
+//     ],
+// },
+{
+    test: /\.(png|jpg|gif)$/i,
+    type: 'asset/inline'
+},
+
+// {
+//     test: /\.(png|jpe?g|gif)$/i,
+//     use: [
+//       {
+//         loader: 'file-loader',
+//       },
+//     ],
+// },
+```
 
 热更新失败
 
-
-联邦模块
-资源引入
