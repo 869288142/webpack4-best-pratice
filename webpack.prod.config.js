@@ -45,7 +45,7 @@ module.exports =   merge(baseWebpackConfig, {
         new CleanWebpackPlugin(),
     ],
     optimization: {
-        minimize: true,
+        runtimeChunk: true,
         minimizer: [new TerserPlugin({
             extractComments: false,
         }),new CssMinimizerPlugin()],

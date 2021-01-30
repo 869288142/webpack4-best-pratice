@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 module.exports = {
     entry: './src/index.js',
     module: {
@@ -6,12 +7,35 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
-                use: ['thread-loader','babel-loader'],
+                use: ['cache-loader', 'thread-loader','babel-loader'],
             },
+            {
+                test: /\.svg$/,
+                use: [
+                    { 
+                        loader: 'svg-sprite-loader', 
+                        options: {
+                            plugins: [
+                                // 自动删除svg的标题
+                                { removeTitle: true },
+                                // 禁止删除无用的Stroked和Fill
+                                { removeUselessStrokeAndFill: false },
+                            ],
+                        } 
+                    },
+                  'svgo-loader'
+                ]
+            },
+            {
+                test: /\.vue$/,
+                use: ['cache-loader', 'thread-loader','vue-loader'],
+            },
+
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin(), 
+        // new HtmlWebpackPlugin(), 
+        new VueLoaderPlugin()
     ],
     output: { 
         filename: '[name].js',

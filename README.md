@@ -389,6 +389,108 @@ module.exports = {
 
 将src/css/global.css后缀改为scss，同时在index.js引入的后缀也改成css,运行`yarn dev`,打包成功
 
+## 配置svg
+
+目前`svg`比较合适的方法是通过`svg sprite`的方式来使用
+
+### 安装依赖
+
+``` shell
+# svgo svg优化
+# svgo-loader svgo webpack插件
+# svg-sprite-loader svg-sprite插件
+yarn add svgo-loader svgo svg-sprite-loader
+```
+
+### 配置webpack
+
+webpack.config.js
+
+``` js
+module.exports = {
+module: {
+    rules: [
+        {
+            test: /\.svg$/,
+            use: [
+                { loader: 'svg-sprite-loader', options: {
+                    
+                } },
+                'svgo-loader'
+            ]
+        }
+
+    ]
+},
+```
+
+### 新增svg目录
+
+新增svg/index.js和svg/assets目录，在里面放入
+
+``` svg
+<svg id="图层_1" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><title>我的订单</title><path d="M20.23,4h0l16.12,6.37L19.93,16.22h-.11L3.7,9.86,20.15,4h.08m0-2a2.07,2.07,0,0,0-.78.14L.76,8.78a1.1,1.1,0,0,0,0,2.06l18.33,7.25a2.06,2.06,0,0,0,.77.14,2.11,2.11,0,0,0,.78-.14l18.69-6.63a1.11,1.11,0,0,0,0-2.07L21,2.15A2.06,2.06,0,0,0,20.23,2Z"/><path d="M19.79,27.9a3.14,3.14,0,0,1-1.13-.21l-18-7.13a1,1,0,0,1,.74-1.86l18,7.13a1.25,1.25,0,0,0,.83,0l18.51-6.57a1,1,0,1,1,.67,1.89L20.89,27.7A3.19,3.19,0,0,1,19.79,27.9Z"/><path d="M19.79,37.92a3.36,3.36,0,0,1-1.13-.2l-18-7.13a1,1,0,0,1-.56-1.3,1,1,0,0,1,1.3-.56l18,7.12a1.13,1.13,0,0,0,.83,0l18.51-6.56a1,1,0,1,1,.67,1.88l-18.5,6.56A3.19,3.19,0,0,1,19.79,37.92Z"/></svg>
+```
+
+``` js
+let req = require.context('./assets', false, /\.svg$/);
+
+let requireAll = function (requireContext) {
+    requireContext.keys().map(requireContext);
+};
+
+requireAll(req);
+
+```
+
+### 运行命令验证效果
+
+`yarn dev`
+
+![](src\images\svg.png)
+
+## 配置Vue环境
+
+### 安装依赖
+
+``` shell
+# vue-loader vue-template-compiler vue 用来编译Vue文件
+# @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props 支持Vue JSX写法
+yarn add vue-loader vue-template-compiler vue  @vue/babel-preset-jsx @vue/babel-helper-vue-jsx-merge-props
+```
+
+### 配置webpack
+
+``` js
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.vue$/,
+                use: ['cache-loader', 'thread-loader','vue-loader'],
+            },
+
+        ]
+    },
+    plugins: [
+        new VueLoaderPlugin()
+    ],
+};
+```
+
+### 新增文件验证
+
+新增`src/test.vue`,在`index.js`引入
+
+``` js
+import testVue from './test.vue'
+console.log(testVue);
+```
+
+执行`yarn dev`，看到控制台输出结果
+
+
+
 ## 热更新
 
 ### 自动注入依赖和复制html到dist目录
@@ -664,7 +766,6 @@ webpack.prod.config.js
 
 ``` js
 module.exports =   merge(baseWebpackConfig, {
-
     plugins: 
     [   
         // 稳定css hash
@@ -684,6 +785,8 @@ module.exports =   merge(baseWebpackConfig, {
         hashedModuleIds: true,
     },
     output: { 
+        // 分离chunks 映射关系，避免chunk改动时主js hash变动
+        runtimeChunk: true,
         // 稳定文件hash
         filename: '[name].[contenthash].js',
         // 稳定chunk hash
@@ -707,7 +810,6 @@ yarn add thread-loader
 webpack.config.js
 
 ``` js
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     module: {
         rules: [
@@ -739,4 +841,29 @@ yarn add fibers
         },
     },
 },
+```
+
+### 缓存
+
+目前推荐使用`cache-loader`
+
+``` shell
+yarn add  cache-loader
+```
+
+webpack.config.js
+
+``` js
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules)/,
+                // 添加cache-loader提高二次编译速度
+                use: ['cache-loader', 'thread-loader','babel-loader']
+            },
+        ]
+    },
+};
 ```
