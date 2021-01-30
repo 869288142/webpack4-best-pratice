@@ -22,9 +22,16 @@ module.exports =   merge(baseWebpackConfig, {
             },
         ]
     },
-    plugins: [new MiniCssExtractPlugin()],
+    plugins: [new MiniCssExtractPlugin(
+        {
+            filename: '[name].[contenthash].css',
+            chunkFilename: '[name].[contenthash].css'
+        }
+    )],
     optimization: {
         minimize: true,
         minimizer: [new TerserPlugin(),new CssMinimizerPlugin()],
+        hashedModuleIds: true,
     },
+ 
 });

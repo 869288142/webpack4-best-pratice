@@ -12,5 +12,14 @@ module.exports = {
             },
         ]
     },
-    plugins: [new HtmlWebpackPlugin()]
+    plugins: [
+        new HtmlWebpackPlugin(), 
+        new webpack.NamedChunksPlugin(
+            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+        ),
+    ],
+    output: { 
+        filename: '[name].[contenthash].js',
+        chunkFilename: '[name].[contenthash].js'
+    }, 
 };

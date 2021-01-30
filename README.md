@@ -649,7 +649,47 @@ module.exports =   merge(baseWebpackConfig, {
 
 ```yarn dev```，看到main.css已经被压缩
 
+## 持久化缓存
 
+这里建议阅读[这篇文章](https://segmentfault.com/a/1190000016355127),详细讲述了每个情况下文件缓存名变化的应对方案，最终总结下来的配置如下：
+
+webpack.config.js
+
+``` js
+module.exports = {
+    plugins: [
+        // 稳定chunk ID
+        new webpack.NamedChunksPlugin(
+            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+        ),
+    ],
+    output: { 
+        // 稳定文件hash
+        filename: '[name].[contenthash].js',
+        // 稳定chunk hash
+        chunkFilename: '[name].[contenthash].js'
+    }, 
+};
+```
+
+webpack.prod.config.js
+
+``` js
+module.exports =   merge(baseWebpackConfig, {
+    // 稳定css hash
+    plugins: [new MiniCssExtractPlugin(
+        {
+            filename: '[name].[contenthash].css',
+            chunkFilename: '[name].[contenthash].css'
+        }
+    )],
+    // 稳定模块 ID
+    optimization: {
+        hashedModuleIds: true,
+    },
+ 
+});
+```
 
 ## js
 
