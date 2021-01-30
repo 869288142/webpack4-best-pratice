@@ -5,9 +5,15 @@ module.exports =   merge(baseWebpackConfig, {
     mode:'development',
     devtool : 'eval-source-map',
     devServer: {
-      contentBase: './dist',
-      hot: true,
-      overlay: true
+      static: {
+        directory: './dist',
+      },
+      client: {
+        overlay: {
+          warnings: true,
+          errors: true
+        }
+      }
     },
     module: {
         rules: [
