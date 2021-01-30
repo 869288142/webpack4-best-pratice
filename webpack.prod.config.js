@@ -1,4 +1,5 @@
 const baseWebpackConfig = require('./webpack.config')
+process.traceDeprecation = true;
 const { merge } = require('webpack-merge');
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -12,13 +13,28 @@ module.exports =   merge(baseWebpackConfig, {
         rules: [
             {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader,"css-loader", "postcss-loader"],
+                use: [
+                    MiniCssExtractPlugin.loader,                  
+                    {
+                        loader: "css-loader",
+                        options:{
+                          importLoaders: 1,
+                        } 
+                    }, 
+                    "postcss-loader"
+                ],
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
                   MiniCssExtractPlugin.loader,
-                  "css-loader",
+                  {
+                    loader: "css-loader",
+                    options:{
+                      importLoaders: 2,
+                    } 
+                  }, 
+                   "postcss-loader",
                   {
                     loader: "sass-loader",
                     options: {
@@ -39,9 +55,6 @@ module.exports =   merge(baseWebpackConfig, {
                 chunkFilename: '[name].[contenthash:8].css'
             }
         ),   
-        new webpack.NamedChunksPlugin(
-            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
-        ),
         new CleanWebpackPlugin(),
     ],
     optimization: {
@@ -49,7 +62,6 @@ module.exports =   merge(baseWebpackConfig, {
         minimizer: [new TerserPlugin({
             extractComments: false,
         }),new CssMinimizerPlugin()],
-        hashedModuleIds: true,
     },
     output: { 
         filename: '[name].[contenthash:8].js',

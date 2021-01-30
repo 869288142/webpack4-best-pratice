@@ -11,13 +11,28 @@ module.exports =   merge(baseWebpackConfig, {
         rules: [
             {
                 test: /\.css$/i,
-                use: ["style-loader","css-loader", "postcss-loader"],
+                use: [
+                  "style-loader",
+                  {
+                    loader: "css-loader",
+                    options:{
+                      importLoaders: 1,
+                    } 
+                  }, 
+                  "postcss-loader"
+                ],
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
                   "style-loader",
-                  "css-loader",
+                  {
+                    loader: "css-loader",
+                    options:{
+                      importLoaders: 1,
+                    } 
+                  }, 
+                  "postcss-loader",
                   {
                     loader: "sass-loader",
                     options: {

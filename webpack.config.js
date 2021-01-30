@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const path = require('path')
 module.exports = {
     entry: './src/index.js',
     module: {
@@ -26,7 +27,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
-                use: ['cache-loader', 'thread-loader','babel-loader'],
+                use: [ 'thread-loader','babel-loader'],
             },
             {
                 test: /\.svg$/,
@@ -47,7 +48,7 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: ['cache-loader', 'thread-loader','vue-loader'],
+                use: ['thread-loader','vue-loader'],
             },
 
         ]
@@ -61,6 +62,7 @@ module.exports = {
         chunkFilename: '[name].js',
         devtoolModuleFilenameTemplate:
         'webpack:///[absolute-resource-path]',
+        path: path.resolve(process.cwd(), 'dist'),
     }, 
     optimization: {
         splitChunks: {

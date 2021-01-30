@@ -956,8 +956,50 @@ module.exports = {
 
 ## 升级到webpack5
 
+### 升级webpack
+
 ``` shell
 yarn add webpack
 ```
 
+### 升级terser-webpack-plugin
+
+``` shell
+yarn add terser-webpack-plugin
+```
+
+### 移除持久化缓存选项
+
+webpack已经默认支持了moduleID和chunkID的稳定算法，所以这2个插件移除
+
+``` js
+module.exports =   merge(baseWebpackConfig, {
+    plugins: 
+    [ 
+        // new webpack.NamedChunksPlugin(
+        //     chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+        // ),
+    ],
+    optimization: {
+        //hashedModuleIds: true,
+    },
+ 
+});
+```
+
+### 删除cache-loader
+
+webpack5内置了缓存机制，缓存效果和缓存安全性更好,cache-loader可以删除
+
+### 更新html-webpack-plugin
+
+``` shell
+yarn add  html-webpack-plugin@next
+```
+
+
 热更新失败
+
+
+联邦模块
+资源引入
