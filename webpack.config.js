@@ -6,9 +6,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
-                use: {
-                    loader: 'babel-loader',
-                },
+                use: ['thread-loader','babel-loader'],
             },
         ]
     },
@@ -16,7 +14,9 @@ module.exports = {
         new HtmlWebpackPlugin(), 
     ],
     output: { 
-        filename: '[name].[contenthash].js',
-        chunkFilename: '[name].[contenthash].js'
+        filename: '[name].js',
+        chunkFilename: '[name].js',
+        devtoolModuleFilenameTemplate:
+        'webpack:///[absolute-resource-path]',
     }, 
 };

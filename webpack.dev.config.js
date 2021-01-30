@@ -18,7 +18,14 @@ module.exports =   merge(baseWebpackConfig, {
                 use: [
                   "style-loader",
                   "css-loader",
-                  "sass-loader",
+                  {
+                    loader: "sass-loader",
+                    options: {
+                      sassOptions: {
+                        fiber: require("fibers"),
+                      },
+                    },
+                  }
                 ],
             },
         ]

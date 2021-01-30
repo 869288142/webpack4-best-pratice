@@ -56,8 +56,8 @@ yarn dev
 ### 安装babel
 
 ``` shell
-# @babel/core babel转换器核心代码
-# @babel/preset-env 配置babel环境转换
+# @babel/core babel 转换器核心包
+# @babel/preset-env babel转化配置包
 # babel-loader baberl的webpack插件
 yarn add babel-loader @babel/core @babel/preset-env
 ```
@@ -127,7 +127,7 @@ module.exports = {
 yarn dev
 ```
 
-![](./src/images/webpack-compiler.png)
+![](src\images\babel-compiler.png)
 
 可以看到我们的const已经被转译成了var
 
@@ -139,21 +139,17 @@ yarn dev
 Promise.resolve(1)
 ```
 
-执行
-
-``` shell
-yarn dev
-```
+执行`yarn dev`
 
 ![](./src/images/babel-api-test.png)
 
-可以看到我们的Promise并没有转译，也就会缺少API级别的兼容性
+可以看到我们的Promise并没有转译，<span style="color:red">也就会缺少API级别的兼容性</span>
 
 ### 配置ES6+ API编译
 
-查看官网发现，babel将编译分成了2类，一类成为语法编译，一类称为polyfill
+<span style="color:red">babel将编译分成了2类，一类成为语法编译，一类称为polyfill</span>
 
-语法：
+**语法：**
 
 ``` js
 const a = 1
@@ -161,7 +157,7 @@ const a = 1
 var a  =  1
 ```
 
-polyfill
+**polyfill**
 
 ``` js
 Promise.resolve(1)
@@ -178,7 +174,7 @@ module.exports = {
     presets: [
         [
             '@babel/preset-env',{
-                // 配置useBuiltIns为entry，防止依赖的第三方库没声明其es6+的API导致我们应用程序出错
+                // 配置useBuiltIns为entry，防止依赖的第三方库没声明其es6+的API导致我们应用程序出错,不建议usage选项，需要在开发中熟悉第三方包是否使用到ES6+的API
                 useBuiltIns: 'entry',
                 // 使用corejs3版本，corejs2很早就冻结分支了，例如Array.prototype.flat只在corejs3版本
                 corejs: 3
@@ -395,7 +391,7 @@ module.exports = {
 
 ## 热更新
 
-### 自动注入和copy index.html到dist
+### 自动注入依赖和复制html到dist目录
 
 #### 安装依赖
 
@@ -658,10 +654,8 @@ webpack.config.js
 ``` js
 module.exports = {
     output: { 
-        // 稳定文件hash
-        filename: '[name].[contenthash].js',
-        // 稳定chunk hash
-        chunkFilename: '[name].[contenthash].js'
+       filename: '[name].js',
+       chunkFilename: '[name].js'
     }, 
 };
 ```
@@ -689,71 +683,60 @@ module.exports =   merge(baseWebpackConfig, {
     optimization: {
         hashedModuleIds: true,
     },
- 
+    output: { 
+        // 稳定文件hash
+        filename: '[name].[contenthash].js',
+        // 稳定chunk hash
+        chunkFilename: '[name].[contenthash].js'
+    }, 
 });
 ```
 
-## js
+## 性能优化
 
-- [x] 基本配置
-  - [x] babel
-  - [x] babel.config.js暴露
-  - [x] polyfill 引入babel-polyfill即可
+### 并发
 
-- [x] 代码优化
-  - [x] Scope Hoisting
-  - [x] tree Shaking
+#### javascript
 
-- [x] 调试
-  - [x] source-map
+目前推荐使用官方的`thread-loader`,由于多线程有通信损耗，建议用在消耗大的loader，比如babel-loader
 
-- [x] 构建性能
-  - [x] cache-loader
-  - [x] thread-loader
-  - [x] DllPlugin externals  跟项目不兼容
+``` shell
+yarn add thread-loader
+```
 
-- [x] 压缩
-  - [x] 压缩
+webpack.config.js
 
-- [x] 规范
-  - [x] eslint 具体配置
-  - [x] prettier 按需
+``` js
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules)/,
+                // 为babel添加thread-loader，多进程编译
+                use: ['thread-loader','babel-loader']
+            },
+        ]
+    },
+};
+```
 
-## css
+#### sass
 
-- [x] 基本配置
-  - [x] sass
-  - [x] postcss
-  - [x] .browserslistrc暴露
+官方推荐使用使用`fibers`提升`sass`编译速度
 
-- [x] 代码优化
-  - [x] treeShaking 无法静态分析，风险大，不做
+``` shell
+yarn add fibers
+```
 
-- [x] 构建性能
-  - [x] fibers
-
-- [x] 压缩
-  - [x] 压缩
-
-- [ ] 代码规范
-  - [ ] styleLint  暂时没必要
-
-## svg
-
-- [x] svg
-  - [x] 移除title
-  - [x] 合并symbol
-
-## vue
-
-- [x] vue
-
-
-## webpack
-
-- [ ] 构建性能 接入项目后再具体优化
-
-- [ ] 打包体积 接入项目后再具体优化
-
-  - [ ] 按需加载
-  - [ ] 拆分代码
+``` js
+{
+    loader: "sass-loader",
+    options: {
+        sassOptions: {
+            require("fibers"),
+        },
+    },
+},
+```

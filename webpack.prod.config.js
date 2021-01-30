@@ -19,7 +19,14 @@ module.exports =   merge(baseWebpackConfig, {
                 use: [
                   MiniCssExtractPlugin.loader,
                   "css-loader",
-                  "sass-loader",
+                  {
+                    loader: "sass-loader",
+                    options: {
+                      sassOptions: {
+                        fiber: require("fibers"),
+                      },
+                    },
+                  }
                 ],
             },
         ]
@@ -39,8 +46,14 @@ module.exports =   merge(baseWebpackConfig, {
     ],
     optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin(),new CssMinimizerPlugin()],
+        minimizer: [new TerserPlugin({
+            extractComments: false,
+        }),new CssMinimizerPlugin()],
         hashedModuleIds: true,
     },
+    output: { 
+        filename: '[name].[contenthash].js',
+        chunkFilename: '[name].[contenthash].js'
+    }, 
  
 });
