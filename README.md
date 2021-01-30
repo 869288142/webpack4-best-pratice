@@ -657,12 +657,6 @@ webpack.config.js
 
 ``` js
 module.exports = {
-    plugins: [
-        // 稳定chunk ID
-        new webpack.NamedChunksPlugin(
-            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
-        ),
-    ],
     output: { 
         // 稳定文件hash
         filename: '[name].[contenthash].js',
@@ -676,13 +670,21 @@ webpack.prod.config.js
 
 ``` js
 module.exports =   merge(baseWebpackConfig, {
-    // 稳定css hash
-    plugins: [new MiniCssExtractPlugin(
-        {
-            filename: '[name].[contenthash].css',
-            chunkFilename: '[name].[contenthash].css'
-        }
-    )],
+
+    plugins: 
+    [   
+        // 稳定css hash
+        new MiniCssExtractPlugin(
+            {
+                filename: '[name].[contenthash].css',
+                chunkFilename: '[name].[contenthash].css'
+            }
+        ),   
+        // 稳定chunk ID
+        new webpack.NamedChunksPlugin(
+            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+        ),
+    ],
     // 稳定模块 ID
     optimization: {
         hashedModuleIds: true,
