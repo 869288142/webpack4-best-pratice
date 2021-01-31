@@ -1,0 +1,15 @@
+diff --git a/node_modules/webpack-dev-server/lib/utils/normalizeOptions.js b/node_modules/webpack-dev-server/lib/utils/normalizeOptions.js
+index 285cd08..12fb31d 100644
+--- a/node_modules/webpack-dev-server/lib/utils/normalizeOptions.js
++++ b/node_modules/webpack-dev-server/lib/utils/normalizeOptions.js
+@@ -72,6 +72,10 @@ function normalizeOptions(compiler, options) {
+   options.liveReload =
+     typeof options.liveReload !== 'undefined' ? options.liveReload : true;
+ 
++  options.clientOverlay =
++    typeof options.overlay !== 'undefined' ? options.overlay : false;
++
++
+   // normalize transportMode option
+   if (typeof options.transportMode === 'undefined') {
+     options.transportMode = {

@@ -8,11 +8,9 @@ module.exports =   merge(baseWebpackConfig, {
       static: {
         directory: './dist',
       },
-      client: {
-        overlay: {
-          warnings: true,
-          errors: true
-        }
+      overlay: {
+        warnings: true,
+        errors: true
       }
     },
     module: {

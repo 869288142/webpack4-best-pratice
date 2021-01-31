@@ -989,7 +989,7 @@ module.exports =   merge(baseWebpackConfig, {
 
 ### 删除cache-loader
 
-webpack5内置了缓存机制，缓存效果和缓存安全性更好,cache-loader可以删除
+webpack5内置了缓存机制，**缓存效果和缓存安全性更好**,cache-loader可以删除
 
 ### 更新html-webpack-plugin
 
@@ -998,6 +998,9 @@ yarn add  html-webpack-plugin@next
 ```
 
 ### 废弃file-loader和url-loader
+
+webpack 推出了资源这个概念，之前的`file-loader`
+和`url-loader`已经被视为资源，**如果资源配置满足你的话，迁移这个2个loader到对应的资源类型**
 
 ``` js
 {
@@ -1032,6 +1035,8 @@ yarn add  html-webpack-plugin@next
 
 ## 热更新失效
 
+需要把`target`设置为`web`平台
+
 webpack.config.js
 
 ``` js
@@ -1040,3 +1045,83 @@ module.exports = {
 }
 ```
 
+## 热更新overlay失效
+
+### 配置失效
+
+在尝试触发一个错误并且配置了`devServer`的`overlay`属性，发现错误弹窗没有显示错误信息
+
+``` js
+devServer: {
+    static: {
+        directory: './dist',
+    },
+    // 配置了错误弹窗
+    overlay: {
+        warnings: true,
+        errors: true
+    }
+},
+```
+![](src\images\overlay-not-work.png)
+
+### webpack-dev-server未适配
+
+经过调试和阅读源码发现问题是`webpack-dev-server`3.0还没适配`webpack5`
+
+### 升级适配的webpack-dev-server版本
+
+可以升级到正常适配`webpack5`的`beta`版,执行
+
+``` shell
+yarn add webpack-dev-server@next 
+```
+### 调试打补丁
+
+安装完还是发现显示不了，继续调试，发现是这里的变量没有赋值，由于先用`patch-package`自己先打个补丁
+
+#### 安装依赖
+
+``` shell
+yarn add patch-package
+```
+
+#### 修改文件
+
+`node_modules\webpack-dev-server\lib\utils\normalizeOptions.js`
+
+``` js
+  options.clientOverlay =
+    typeof options.overlay !== 'undefined' ? options.overlay : false;
+
+```
+
+![](src\images\patch-webpack-dev-server.png)
+
+#### 执行patch
+
+``` shell
+npx patch-package webpack-dev-server
+```
+
+#### 重新运行查看结果
+
+![](src\images\overlay-work.png)
+
+#### 给webpack-dev-server提PR
+
+**PR步骤：**
+
+* fork开源仓库
+
+* 修改代码，通过仓库的规范检查(风格、质量、类型检查)，同时要新增单元测试并通过当时的所有测试，在`webpack-dev-server`表现为
+
+![](src\images\PR.png)
+
+* 推送到自己的远程仓库
+
+* 在原仓库发起PR
+
+* 给维护者用三级英语交流
+
+[PR地址](https://github.com/webpack/webpack-dev-server/pull/2981)
