@@ -6,4 +6,5 @@ Promise.resolve(1)
 import  './css/global.scss'
 import './a';
 import './svg';
-import('./test.vue').then(console.log(testVue))
+import A from './test.txt'
+console.log(A);

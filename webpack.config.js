@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const path = require('path')
 module.exports = {
     entry: './src/index.js',
     module: {
@@ -49,6 +50,15 @@ module.exports = {
                 test: /\.vue$/,
                 use: ['cache-loader', 'thread-loader','vue-loader'],
             },
+            {
+              test: /\.txt$/,
+              use: {
+                loader: path.resolve(__dirname, './loaders/replace-loader.js'),
+                options: {
+                  name: 'chenjiang'
+                },
+              }
+            }
 
         ]
     },
