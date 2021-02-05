@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+var HelloWorldPlugin = require('./plugins/HelloWorldPlugin');
 const path = require('path')
 module.exports = {
     entry: './src/index.js',
@@ -64,7 +65,10 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin(), 
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new HelloWorldPlugin({
+          name: []
+        })
     ],
     output: { 
         filename: '[name].js',

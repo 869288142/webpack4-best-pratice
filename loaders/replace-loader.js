@@ -16,7 +16,11 @@ module.exports = function loader(source) {
     baseDataPath: 'options'
   });
 
+  const callback = this.async();
+
   source = source.replace(/\[name\]/g, options.name);
 
-  return `export default ${ JSON.stringify(source) }`;
+  callback(null, `export default ${ JSON.stringify(source) }` );
+
+
 }
