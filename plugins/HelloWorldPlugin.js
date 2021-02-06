@@ -11,7 +11,7 @@ const schema = {
 class HelloWorldPlugin {
     constructor(options = {}) {
         validate(schema, options, 'Hello World Plugin');
-        console.log(options);
+        this.options = options
     }
     apply(compiler) {
       // 注册指定hook逻辑

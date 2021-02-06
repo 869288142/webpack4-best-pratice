@@ -67,7 +67,7 @@ module.exports = {
         new HtmlWebpackPlugin(), 
         new VueLoaderPlugin(),
         new HelloWorldPlugin({
-          name: []
+          name: 'chenjiang'
         })
     ],
     output: { 
