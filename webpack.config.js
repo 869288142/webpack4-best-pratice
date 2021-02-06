@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 var HelloWorldPlugin = require('./plugins/HelloWorldPlugin');
+var FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
 const path = require('path')
 module.exports = {
     entry: './src/index.js',
@@ -64,11 +65,9 @@ module.exports = {
         ]
     },
     plugins: [
+        new FriendlyErrorsWebpackPlugin(),
         new HtmlWebpackPlugin(), 
         new VueLoaderPlugin(),
-        new HelloWorldPlugin({
-          name: 'chenjiang'
-        })
     ],
     output: { 
         filename: '[name].js',
@@ -94,5 +93,21 @@ module.exports = {
                 }
               }
         }
+    },
+    stats: {
+      // 只展示输出的文件
+      cachedAssets : false,
+      // 隐藏具体的模块信息
+      modules: false,
+      // 关闭子模块输出
+      children: false,
+      // 关闭webpack本次hash输出
+      hash: false,
+      // 关闭webpack版本输出
+      version: false,
+      // 关闭构建完成时间
+      builtAt: false,
+      // 编译消耗时间
+      timings: false,
     }
 };

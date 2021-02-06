@@ -6,6 +6,12 @@ module.exports =   merge(baseWebpackConfig, {
     devServer: {
         contentBase: './dist',
         hot: true,
+        overlay: {
+          warnings: true,
+          errors: true
+        },
+        logLevel: 'silent',
+        clientLogLevel: 'silent',
     },
     module: {
         rules: [
@@ -30,4 +36,8 @@ module.exports =   merge(baseWebpackConfig, {
             },
         ]
     },
+    stats: {
+      assets: false,
+      entrypoints: false
+    }
 });
