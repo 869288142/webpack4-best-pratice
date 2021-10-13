@@ -1,76 +1,76 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
-const path = require('path')
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
+const path = require("path");
 module.exports = {
-    entry: './src/index.js',
-    target: 'web',
-    module: {
-        rules: [
-            {
-              test: /\.(png|jpg|gif)$/i,
-              type: 'asset/resource'
-            },
-            {
-              test: /\.(png|jpg|gif)$/i,
-              type: 'asset/inline'
-            },
-            {
-                test: /\.js$/,
-                exclude: /(node_modules)/,
-                use: [ 'thread-loader','babel-loader'],
-            },
-            {
-                test: /\.svg$/,
-                use: [
-                    { 
-                        loader: 'svg-sprite-loader', 
-                        options: {
-                            plugins: [
-                                // 自动删除svg的标题
-                                { removeTitle: true },
-                                // 禁止删除无用的Stroked和Fill
-                                { removeUselessStrokeAndFill: false },
-                            ],
-                        } 
-                    },
-                  'svgo-loader'
-                ]
-            },
-            {
-                test: /\.vue$/,
-                use: ['thread-loader','vue-loader'],
-            },
+  entry: "./src/index.js",
+  target: "web",
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpg|gif)$/i,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 100 * 1024,
+          },
+        },
+        generator: {
+          filename: `[name].[hash:8][ext]`,
+        },
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: ["thread-loader", "babel-loader"],
+      },
 
-        ]
-    },
-    plugins: [
-        new HtmlWebpackPlugin(), 
-        new VueLoaderPlugin()
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-sprite-loader",
+            options: {
+              plugins: [
+                // 自动删除svg的标题
+                { removeTitle: true },
+                // 禁止删除无用的Stroked和Fill
+                { removeUselessStrokeAndFill: false },
+              ],
+            },
+          },
+          "svgo-loader",
+        ],
+      },
+      {
+        test: /\.vue$/,
+        use: ["thread-loader", "vue-loader"],
+      },
     ],
-    output: { 
-        filename: '[name].js',
-        chunkFilename: '[name].js',
-        devtoolModuleFilenameTemplate:
-        'webpack:///[absolute-resource-path]',
-        path: path.resolve(process.cwd(), 'dist'),
-    }, 
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                vendors: {
-                  name: `chunk-vendors`,
-                  test: /[\\/]node_modules[\\/]/,
-                  priority: -10,
-                  chunks: 'initial'
-                },
-                common: {
-                  name: `chunk-common`,
-                  minChunks: 2,
-                  priority: -20,
-                  chunks: 'initial',
-                  reuseExistingChunk: true
-                }
-              }
-        }
-    }
+  },
+  plugins: [new HtmlWebpackPlugin(), new VueLoaderPlugin()],
+  output: {
+    filename: "[name].js",
+    chunkFilename: "[name].js",
+    devtoolModuleFilenameTemplate: "webpack:///[absolute-resource-path]",
+    path: path.resolve(process.cwd(), "dist"),
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: `chunk-vendors`,
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: "initial",
+        },
+        common: {
+          name: `chunk-common`,
+          minChunks: 2,
+          priority: -20,
+          chunks: "initial",
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
 };

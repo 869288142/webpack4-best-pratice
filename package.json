@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack serve --open --config=./webpack.dev.config.js",
-    "build": " webpack --config=./webpack.prod.config.js ",
-    "postinstall": "patch-package"
+    "build": " webpack --config=./webpack.prod.config.js "
   },
   "dependencies": {
     "@babel/core": "^7.15.8",

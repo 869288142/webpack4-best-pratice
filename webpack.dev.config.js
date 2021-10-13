@@ -4,6 +4,15 @@ const webpack = require('webpack')
 module.exports =   merge(baseWebpackConfig, {
     mode:'development',
     devtool : 'eval-source-map',
+    cache: {
+      type: "filesystem",
+      // 开发缓存
+      name: "dev",
+      // webpack依赖更新时，清除缓存
+      buildDependencies: {
+        config: [__filename],
+      },
+    },
     devServer: {
       static: {
         directory: './dist',

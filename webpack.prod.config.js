@@ -5,10 +5,18 @@ const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports =   merge(baseWebpackConfig, {
     mode:'production',
     devtool : 'source-map',
+    cache: {
+      type: "filesystem",
+      // 生产缓存
+      name: "prod",
+      // webpack依赖更新时，清除缓存
+      buildDependencies: {
+        config: [__filename],
+      },
+    },
     module: {
         rules: [
             {
@@ -55,7 +63,6 @@ module.exports =   merge(baseWebpackConfig, {
                 chunkFilename: '[name].[contenthash:8].css'
             }
         ),   
-        new CleanWebpackPlugin(),
     ],
     optimization: {
         runtimeChunk: true,
@@ -64,6 +71,7 @@ module.exports =   merge(baseWebpackConfig, {
         }),new CssMinimizerPlugin()],
     },
     output: { 
+        clean: true,
         filename: '[name].[contenthash:8].js',
         chunkFilename: '[name].[contenthash:8].js',
     }, 
